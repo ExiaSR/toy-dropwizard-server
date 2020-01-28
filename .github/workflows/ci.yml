@@ -27,7 +27,12 @@ jobs:
       - name: Spin up server before E2E testing
         run: docker-compose up -d
 
-      - name: GitHub Action for pytest
-        uses: cclauss/GitHub-Action-for-pytest@master
+      - uses: actions/setup-python@v1
         with:
-          args: pytest
+          python-version: "3.x" # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          architecture: "x64" # optional x64 or x86. Defaults to x64 if not specified
+
+      - run: pip install -U requests pytest
+
+      - name: Run pytest
+        run: docker-compose up -d
