@@ -1,9 +1,6 @@
 name: continuous-integration-foo
 
-on:
-  push:
-    branches:
-      - master
+on: [push, pull_request]
 
 jobs:
   build-and-test:
@@ -24,7 +21,11 @@ jobs:
         working-directory: .
         run: ./gradlew test
 
-      - name: Spin up server before E2E testing
+  integration-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Spin up server before integration testing
         run: docker-compose up -d
 
       - uses: actions/setup-python@v1
@@ -35,4 +36,4 @@ jobs:
       - run: pip install -U requests pytest
 
       - name: Run pytest
-        run: docker-compose up -d
+        run: pytest
